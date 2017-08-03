@@ -5,11 +5,11 @@ Ok now we can get and return requests, but that's really not very interesting.  
 ### Rest Architecture
 There is a convention for determining what http address/verb combinations are supposed to do.  We'll use contacts for an example.  In a typical 'REST' framework, the following combinations are what you use:
 
-POST /contacts  -- create a new contact
-GET /contacts/:id  -- get a contact with a particular id
-GET /contacts   -- get a list of all contacts
-PUT /contacts/:id  -- modify the contact with a particular id
-DELETE /contacts/:id  -- delete the contact with a particular id
+1. POST /contacts  -- create a new contact
+2. GET /contacts/:id  -- get a contact with a particular id
+3. GET /contacts   -- get a list of all contacts
+4. PUT /contacts/:id  -- modify the contact with a particular id
+5. DELETE /contacts/:id  -- delete the contact with a particular id
 
 We'll take these one at a time.
 
