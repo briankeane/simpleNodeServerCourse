@@ -27,7 +27,7 @@ Now go back into example.js and try this:
 var NameCaller = require('./nameCaller.js');
 
 console.log(NameCaller.message);
-NameCaller.callName();
+NameCaller.callName('barry');
 NameCaller.sayMessage();
 ```
 
