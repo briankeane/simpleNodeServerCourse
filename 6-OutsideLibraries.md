@@ -29,4 +29,4 @@ var express = require('express');
 
 Notice that the string you pass to require is not './node_modules/express' That's because node automatically searches your node_modules folder if it doesn't find the require string somewhere else.  So, if the library is in your node_modules, you don't need to tell require the exact location of the folder.
 
-## PRACTICE -- Later on we'll use a package called "morgan" to log requests...  For practice, install the 'morgan' package now and make sure it showed up in your package.json.  Start by googling `npm morgan` and you should find the instructions for installing (which should be pretty much the same as express)
+PRACTICE -- Later on we'll use a package called "morgan" to log requests...  For practice, install the 'morgan' package now and make sure it showed up in your package.json.  Start by googling `npm morgan` and you should find the instructions for installing (which should be pretty much the same as express)
