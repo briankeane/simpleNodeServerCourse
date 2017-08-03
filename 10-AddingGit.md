@@ -20,6 +20,7 @@ node_modules
 That's it!  Now type this to make your first commit and push it up
 ```
 git init
+git remote add origin [COPY_ADDRESS_FROM_YOUR_NEW_REPO_HERE]
 git add --all
 git commit -m "Initial Commit"
 git push -u origin master
