@@ -7,6 +7,7 @@ There is a convention for determining what http address/verb combinations are su
 
 POST /contacts  -- create a new contact
 GET /contacts/:id  -- get a contact with a particular id
+GET /contacts   -- get a list of all contacts
 PUT /contacts/:id  -- modify the contact with a particular id
 DELETE /contacts/:id  -- delete the contact with a particular id
 

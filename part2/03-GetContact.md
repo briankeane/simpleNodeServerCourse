@@ -21,4 +21,71 @@ Now you go ahead and fill in the rest.  Step through the contacts array and find
 
 To test it, start the server and load up a few contacts with Postman.  You probably want to use slightly different names ("bob1", "bob2") to make sure you retrieve the right one.
 
-Then make a new tab in Postman and set up a GET /contacts/2 request and see if you can get it to work!
+Then make a new tab in Postman and set up a GET /contacts/2 request and see if you can get it to work!  If it does, deploy to heroku and use Postman to do the same thing to our heroku app.
+
+Solution below:
+```
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+app.get('/contacts/:id', function (req, res) {
+  for (var i=0;i<contacts.length;i++) {
+    if (contacts[i].id == Number(req.params.id)) {
+      return res.status(200).send(contacts[i]);
+    }
+  }
+  return res.status(404).send({ message: 'contact not found' });
+});
+```

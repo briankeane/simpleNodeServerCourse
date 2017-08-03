@@ -84,14 +84,11 @@ function addNumbers (numberOne, numberTwo, callback) {
   callback(total);
 }
 ```
+So in order to write a function that calls the callback correctly, you just look at the code that needs to call it and make sure when you invoke `callback` from within the function it's done in the right way.
 
-Of course this could be done syncronously with a 'return' statement (since it doesn't actually wait for anything...) but I'm stripping everything else out except the callback so you can see how it's declared.
+If addNumbers was inside of someone else's library (which is usually what you'll be dealing with), then how do you know which arguments to put into the callback?  The answer is that you have to check the documentation or find an example of the function in use.  So... when working in Node you have to deal with a lot more googling and reading other people's documentation than you're probably used to.  A great example of documentation that has great example is the express docs at http://expressjs.com/en/api.html.  Notice how they always provide a function with an example callback, so that you can copy the arguments when you call their function yourself.
 
-addNumbers takes three arguments, two numbers and a callback.  By looking at the code, we can tell that after this function has finished doing it's work, it calls the callback with 1 argument (total).
-
-The confusing thing for me was: when you call 'addNumbers' at the bottom, how do you know that it will have one argument that's the total?  The answer is that -- you don't.  You can ONLY tell by looking at the original code or reading the 'documentation' for the addNumbers function.  So the best way to make it clearer would be to add comments before the function like this:
-
-
+I like to document the callback right within the function, so in the code I'll put something like this:
 ```
 //  function addNumbers
 //       -- takes three arguments
