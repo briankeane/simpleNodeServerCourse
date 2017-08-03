@@ -16,6 +16,6 @@ router.get('/whatsUp/:name', function (req, res, next) {
 
 app.use(router);
 
-app.server = server.listen(9000, function () {
+app.server = server.listen(process.env.port || 9000, function () {
   console.log('listening on port 9000');
 });
