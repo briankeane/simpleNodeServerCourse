@@ -42,14 +42,29 @@ So now the question is: how do you know to put (total) as the argument in the ca
 I think the best way to see this is to go backwards and write a function that takes a callback.  Make a new file called takesACallback.js and put this in it:
 
 ```
+// here's the 
+addNumbers(1,2, function (calculatedTotal) {
+  console.log('the calculatedTotal is: ' + calculatedTotal);
+});
+
+function addNumbers (numberOne, numberTwo, callback) {
+  // (You fill this in)
+}
+
+```
+Scroll down for the solution...
+
+
+
+
+
+
+
+```
 function addNumbers (numberOne, numberTwo, callback) {
   var total = numberOne + numberTwo;
   callback(total);
 }
-
-addNumbers(1,2, function (calculatedTotal) {
-  console.log('the calculatedTotal is: ' + calculatedTotal);
-});
 ```
 
 Of course this could be done syncronously with a 'return' statement (since it doesn't actually wait for anything...) but I'm stripping everything else out except the callback so you can see how it's declared.
