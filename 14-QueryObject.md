@@ -22,3 +22,5 @@ app.get('/addViaQuery', function (req, res) {
 ```
 
 Now point the browser to: `localhost:3000/addViaQuery?numberOne=15&numberTwo=5`
+
+If it worked, push it up to github and redeploy on heroku.  Then try the online version in the browser.
