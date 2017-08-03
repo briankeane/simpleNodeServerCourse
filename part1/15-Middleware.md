@@ -2,7 +2,18 @@
 
 Express provides a pretty cool and easy way to plug things into our app to get executed any time a request is called.  In express these other libraries that get executed are called 'middleware.'
 
-The way you add middleware to an express app is to assign it with the same 'use' function that you use for adding routes.  If you do not provide a route as the first parameter ('/something'), then express will execute the function you provide EVERY time a request is made.
+The way you add middleware to an express app is to assign it with the 'use' function.  That middleware will be called on any route that is defined AFTER the middleware is plugged in.  For example if this was in server.js:
+```
+app.get('/something', callback);
+app.get('/somethingElse', callback);
+
+app.use(function (req, res, next) {
+  console.log('this will only log when /finally is visited.');
+  next();  
+});
+
+app.get('/finally', callback);
+```
 
 The best way to see this is to add logging to the app.  Open up server.js and add this code just under `app = express();`.  (It must be before any of your routes are declared with .get)
 ```
@@ -12,7 +23,7 @@ app.use(function (req, res, next) {
 });
 ```
 
-The next() above is a callback that just tells express "ok im finished... you can continue now"
+The next() above is a callback that just tells express "ok im finished... you can continue now."  Either the next middleware will be called or, if there are no more middlewares left, the response function will be called.
 
 Save the file and run node server.js.  Then visit localhost:3000 and refresh a few times to see it logging.
 
