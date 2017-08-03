@@ -20,3 +20,12 @@ Now running `node example.js` should print the line 'this is a string.'
 The point is that we can set modules.export to anything we want -- a string, a function, or an object with a bunch of strings and functions.
 
 Since 'this is a string' is what we stored in 'module.exports,' that string is what gets exposed to the other modules.
+
+PRACTICE -- open nameCaller.js and export an object with a property called `theString` that holds a string literal.  Then get example.js to print it out.
+
+HINT: something like the code below:
+```
+module.exports = {
+  aNumber: 555
+}
+```
