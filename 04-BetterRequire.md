@@ -4,8 +4,8 @@ Usually when you create a module, you want to expose a bunch of related function
 
 ```
 function NameCaller() {
-  var self = this;      // I'll explain this later. for now just know that it makes it so
-                        // we can use the variable 'self' to refer to the new object.
+  var self = this;      // I'll explain this later. for now just know that 'self' will pretty much
+                        // act like you'd expect, but 'this' does some weird things.
 
   this.message = 'hello';
   
