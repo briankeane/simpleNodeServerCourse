@@ -1,5 +1,3 @@
---------------------------------------------------------------------------------------------
-
 # Configuring for heroku
 
 There are two things that heroku needs us to do in order to make the app work online.  The first is that it needs to know how to start the app.  Looking at the heroku instructions (https://devcenter.heroku.com/articles/deploying-nodejs#specifying-a-start-script) you can see that heroku looks in your package.json file for a "script" called "start" -- and then it usese whatever we put there to start the app.  Open up the package.json.
