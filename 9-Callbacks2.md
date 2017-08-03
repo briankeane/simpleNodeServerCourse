@@ -9,7 +9,7 @@ The most common javascript pattern is (err, result).  If no error occured during
 //          -- callback (a function that will be provided two arguments -- an errror if one occured, and the total);
 //
 //  example usage:
-//  addNumbers(1,2, function (total) {
+//  addNumbers(1,2, function (err, total) {
 //    console.log(total);  
 // })
 //                 
