@@ -46,7 +46,7 @@ Now open up example.js and at the bottom add the statement:
 sayName();
 ```
 
-Now when you type `node sayName` it will:
+Now when you type `node example.js` it will:
   1. print statement 1
   2. print statement 2.
   3. load the function into the var sayName
