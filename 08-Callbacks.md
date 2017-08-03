@@ -52,15 +52,33 @@ function addNumbers (numberOne, numberTwo, callback) {
 }
 
 ```
-Scroll down for the solution...
-
-
-
-
-
 
 
 ```
+//
+//
+//
+//     Scroll down for the solution...
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 function addNumbers (numberOne, numberTwo, callback) {
   var total = numberOne + numberTwo;
   callback(total);
