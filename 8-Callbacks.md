@@ -1,8 +1,43 @@
 # Callbacks
 
-One of the most confusing concepts for me was the callback.  The app.get function in server.js line 4 takes two arguments, a string and a callback function.  That's really difficult to see from your first look at it.  
+One of the most confusing concepts for me was the callback.  
 
-The easiest way for me to think about a callback is that you're calling "app.get" and telling it -- "hey -- keep hold of this function and perform it when you're finished doing whatever it is you're doing."
+In node, whatever code you are running has complete control of the event loop and nothing else can run.  So for functions that have to wait on something external to happen (receive a request... get a network response from another computer... wait for a file to load... etc), you can't really "wait" for the answer.
+
+In regular "syncronous" programming, you can just wait for the answer and the "return" it.
+```
+function syncAddNumbers(a,b) {
+  return a+b;
+}
+
+var total = syncAddNumbers(1,5);
+console.log(total);   // 6
+```
+
+But if you have to "wait" on something, returning would block anything else from executing while we wait for the response:
+```
+function syncAddNumbersViaApiRequest(1,5) {
+  var total = askAnotherNetworkSomewhereToAddNumbersSyncronously(1,5);  // let's say this takes 5 secs
+  return total;
+}
+```
+
+Since it could take up to 5 secs to assign the value to 'total', we want to free up the cpu to do other stuff while we're waiting.  That's where an 'asyncronous' callback is useful.  You are essentially saying to the called function: "Do this other function when you're finished doing what you're supposed to do."
+
+So an async version would look like this:
+```
+function asyncAddNumbers(a,b, callback) {
+  askAnotherNetworkSomewhereToAddNumbersAsyncronously(a,b, function (total) {
+    callback(total);
+  });
+}
+
+asyncAddNumbers(5,2, function (total) {
+  console.log(total);
+});
+```
+
+So now the question is: how do you know to put (total) as the argument in the callback function? It seems like magic, but the answer is just that you have to find an example of asyncAddNumbers and copy it or read it's documentation.
 
 I think the best way to see this is to go backwards and write a function that takes a callback.  Make a new file called takesACallback.js and put this in it:
 
@@ -12,10 +47,12 @@ function addNumbers (numberOne, numberTwo, callback) {
   callback(total);
 }
 
-addNumbers(1,2, function (caluclatedTotal) {
-  console.log('the caluclatedTotal is: ' + caluclatedTotal);
+addNumbers(1,2, function (calculatedTotal) {
+  console.log('the calculatedTotal is: ' + calculatedTotal);
 });
 ```
+
+Of course this could be done syncronously with a 'return' statement (since it doesn't actually wait for anything...) but I'm stripping everything else out except the callback so you can see how it's declared.
 
 addNumbers takes three arguments, two numbers and a callback.  By looking at the code, we can tell that after this function has finished doing it's work, it calls the callback with 1 argument (total).
 
