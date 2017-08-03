@@ -11,4 +11,6 @@ Then open up example.js, delete everything, and replace it with the line:
 console.log(require('./nameCaller.js'));
 ```
 
-Now running `node example.js` should print the line 'this is a string.'  Since we stored 'this is a string' in 'module.exports,' we exposed it to the rest of the node app.
+Now running `node example.js` should print the line 'this is a string.'  
+
+Since 'this is a string' is what we stored in 'module.exports,' that string is what gets exposed to the other modules.
