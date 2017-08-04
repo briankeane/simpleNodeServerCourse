@@ -36,7 +36,7 @@ app.post('/contacts', function (req, res) {
 
 Web browsers are pretty crappy for sending POST requests, so it's time to switch to something better.  Download Postman from `https://app.getpostman.com/app/download/osx64` and install it.  Once it's installed open it up.
 
-Change the drop-down menu on the right from a "GET" request to a "POST" request.  In the address field type `localhost:3000/contacts`.  Then click on the 'Body' tab.  Choose 'raw' from the buttons just underneath.  Then change the dropdown menu from 'text' to 'JSON(application/json)'.
+Change the drop-down menu on the left from a "GET" request to a "POST" request.  In the address field type `localhost:3000/contacts`.  Then click on the 'Body' tab.  Choose 'raw' from the buttons just underneath.  Then change the dropdown menu from 'text' to 'JSON(application/json)'.
 
 Now type in the big top field:
 ```
