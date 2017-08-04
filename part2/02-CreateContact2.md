@@ -18,7 +18,7 @@ app.post('/contacts', function (req, res) {
   contacts.push(contactInfo);
 
   // tell the message sender that the contact has been added
-  res.status(201).send({ message: 'contact created' });
+  res.status(201).send(contactInfo);
 });
 
 ```
