@@ -21,6 +21,7 @@ app.get('/addViaParams/:numberOne/:numberTwo', function (req, res) {
 
   // then we can respond with the total
   res.send(`${numberOne + numberTwo}`);   // convert back to string
+                                          // notice those are backtick marks `` and not single quotation marks ''
 });
 
 ```
