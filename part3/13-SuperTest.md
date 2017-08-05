@@ -81,12 +81,12 @@ Then you can replace the code in app.get('/contacts/:id') with a call to Contact
 //
 //
 
-this.findById = function (id, callback) {
-    for (var i=0;i<self.contacts.length;i++) {
-      if (self.contacts[i].id == id) {
-        return callback(null, self.contacts[i]);
-      }
+app.get('/contacts/:id', function (req, res) {
+  Contact.findById(Number(req.params.id), function (err, foundContact) {
+    if (foundContact) {
+      return res.status(200).send(foundContact);
     }
-    return callback(null, null);
-  };
+    return res.status(404).send({ message: 'contact not found'});
+  });
+});
 ```
