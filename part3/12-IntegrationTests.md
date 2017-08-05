@@ -44,6 +44,7 @@ describe.only('/contacts', function () {
                             id: 5
                           }
                         ];
+    Contact.contactsID = 6;
   });
 });
 ```

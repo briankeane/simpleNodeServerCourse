@@ -58,6 +58,7 @@ Let's load up our contacts array with a few contacts to search through so that w
                               id: 5
                             }
                           ];
+      Contact.contactsID = 6;
     });
 
 ```
@@ -91,6 +92,8 @@ Let's load up our contacts array with a few contacts to search through so that w
                               id: 5
                             }
                           ];
+      Contact.contactsID = 6;
+
       Contact.find({ name: 'bob' }, function (err, foundContacts) {
         expect(foundContacts.length).to.equal(2);
         var ids = foundContacts.map((contact) => contact.id);
@@ -107,7 +110,7 @@ Let's load up our contacts array with a few contacts to search through so that w
 
  ```
 
-In this code, we set up the contacts array, then we search for 'bob.'  Since it's an async call, be sure to add `done` as an `it` callback argument, so that mocha knows to wait for the functions to finish.
+In this code, we set up the contacts array and the id iterator. Then we search for 'bob.'  Since it's an async call, be sure to add `done` as an `it` callback argument, so that mocha knows to wait for the functions to finish.
 
 The line `var ids = foundContacts.map((contact) => contact.id);` just creates an array of the found ids so that it's easy for us to test whether or not the right ids are included.  (We don't care about the order for now, as long as the entries are included in the results)
 

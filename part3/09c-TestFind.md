@@ -76,6 +76,7 @@ Now put contact.spec.js back like it was.  Let's move the setup code to a before
                               id: 5
                             }
                           ];
+      Contact.contactsID = 6;
     });
     
     it.only ('finds by name', function (done) {
