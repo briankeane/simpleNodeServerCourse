@@ -14,9 +14,12 @@ describe('A Contact', function () {                 // line 1
 });
 ```
 
-Execution of the test starts with line 3.  Remember that calling the async function means... "when you're done... perform this callback."  That means after passing the callback, this function is done executing.  It skips to line 7, finds the end of the function, and returns.  It does not wait for the callback to be executed.
+Something about async coding that is difficult to get used to is that lines 4 and 5 will not get executed until later -- for now we are just passing them to the Contact.create function and Contact.create is storing the function until it's done with whatever it is doing.
 
-You can tell that this is what's happening if you add a failing expectation after the callback function, like this:
+Mocha runs line 3, which stores lines 4 and 5 for later use but does not execute them.  With lines 4-6 stored, the next line to execute is line 7, which is the end of our test function.  Mocha reaches the end of the test function and assumes that the tests passed because no test has failed yet.
+
+Check out what happens if we put a failing test just after we've loaded the callback into memory.
+
 ```
 describe('A Contact', function () {                 // line 1
   it('creates a contact', function () {             // line 2
@@ -29,7 +32,9 @@ describe('A Contact', function () {                 // line 1
 });
 ```
 
-Fortunately it's easy to tell mocha to wait for a callback. We do that with the "done()" callback.  If a test is syncronous, you leave the argument in "it"'s callback empty.  To tell mocha that a test is async, pass a "done" argument to the "it" function, and call it when you're finished.  (I know that's a mouthful... just look at this example).
+What we need to do is to tell mocha to wait for those expectations to run.  Mocha provides us with a special callback function called `done()` for async functions to tell mocha when the last line of code that we want to test has been run.  If we provide the callback, mocha continues to 'listen' for test failures until `done()` is executed -- instead of stopping with the end of the function.  All we have to do is pass `done` as an argument to our `it` block (line 2), and then call it after our final test (the new line 6).
+
+
 ```
 describe('A Contact', function () {
   it('creates a contact', function (done) {       // THIS LINE IS DIFFERENT
@@ -42,4 +47,6 @@ describe('A Contact', function () {
 });
 ```
 
-Now run the test and get a proper failure.  Every time you create a new test, it's a good idea to run the test and see it fail before you write any code to make it pass.  That way you can be sure that it's YOUR new code that's making it pass instead of some kind of fluke.
+Now run the test and get a proper failure.  
+
+Every time you create a new test, it's a good idea to run the test while you know it should fail and make sure that you actually see it fail before you write any code.  That way you can be sure that it's the new code that's making it pass instead of some kind of fluke in your testing setup.

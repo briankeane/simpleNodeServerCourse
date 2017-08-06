@@ -2,6 +2,8 @@
 
 You've probably gotten the hang of it by now.  Go ahead and try this one on your own.
 
+HINT: you'll have to make an initial call to Contact.findById to make sure the contact exists, because our `remove` function doesn't give us any feedback as to whether the contact actually existed or not.  We need to know whether to send a 404 or a 200.
+
 Solution below:
 ```
 //

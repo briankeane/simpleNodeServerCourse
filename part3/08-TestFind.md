@@ -1,8 +1,9 @@
 ## Test Find
 
-Ok now let's add our tests for find, (which is going to be similar to what we did in our 'search' function in `server.js`)  This test requires a little bit more setup.  We have to make sure that the contacts array has a few in it, so that we can be sure we retrieve the right number of contacts.
+Ok now let's add our tests for find, (which is going to be similar to what we did in our 'search' function in `server.js`)  This test requires a little bit more setup.  We have to make sure that the contacts array has a few in it, so that we can be sure we retrieve the right number of contacts. Let's set up the environment by making our ContactHandler look exactly how it would look if we had send 5 POST requests with sample data.  Don't forget to change the contactsID counter, 
 
-Since the preparation is very different from the 'Create' function, let's put it in a nested 'Describe' block.  Now your test file with our skeleton of tests looks like this:
+
+Since we'll have a few different tests of the 'find' function, let's put them inside their own nested 'Describe' block.  Now your test file with our skeleton of tests looks like this:
 
 ```
 describe('A Contact', function () {
@@ -27,7 +28,7 @@ describe('A Contact', function () {
 });
 ```
 
-Let's load up our contacts array with a few contacts to search through so that we can be sure our results are good.  Since our contacts array is exposed to the outside world through `this.contacts` (in contact.js), we can access it directly in the tests via the . operator.
+Step 1 is to set up the environment.  Let's set up our ContactsHandler so that it looks exactly like it would if we send 5 POST requests in Postman. Since our contacts array is exposed to the outside world (`this.contacts` in contact.js), we can access it directly in the tests via Contact.contacts like this:
 ```
   describe('find', function () {
     it ('finds by name', function (done) {
@@ -112,6 +113,6 @@ Let's load up our contacts array with a few contacts to search through so that w
 
 In this code, we set up the contacts array and the id iterator. Then we search for 'bob.'  Since it's an async call, be sure to add `done` as an `it` callback argument, so that mocha knows to wait for the functions to finish.
 
-The line `var ids = foundContacts.map((contact) => contact.id);` just creates an array of the found ids so that it's easy for us to test whether or not the right ids are included.  (We don't care about the order for now, as long as the entries are included in the results)
+The line `var ids = foundContacts.map((contact) => contact.id);` uses the .map convenience function to create an array with only the found ids so that it's easy for us to test whether or not the right ids are included.  (We don't care about the order for now, as long as the entries are included in the results)
 
-Now lets run the test and see it fail. Mocha has a great option called 'only' that tells mocha only to run the tests you specify.  Change `it('finds by name' ...)` to `it.only('finds by name' ...)` and run the tests to make sure they fail.  You should get `Error: Timeout of 2000ms exceeded`.  This is good!
+Now lets run the test and see it fail. Mocha has a great option called 'only' that tells mocha only to run the tests you specify.  Change `it('finds by name' ...)` to `it.only('finds by name' ...)` and run the tests to make sure they fail.  You should get `Error: Timeout of 2000ms exceeded`.  This is good!  It means that mocha is waiting for the `done()` call, but since we never execute a callback inside Contact.find it never happens, and mocha runs out of time to wait before it sees `done()` executed.

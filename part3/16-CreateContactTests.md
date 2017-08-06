@@ -1,14 +1,14 @@
 ## Create Contacts
 
-Let's start with the first test.  Put a `.only` on the `it` function for 'creates a new contact' so that we can isolate the test while we work on it.
+Let's start with the first test, 'creates a new contact.''  Put a `.only` on the `it` function for 'creates a new contact' so that we can isolate the test while we work on it.
 
-Since this is our first `POST` test with supertest, I'll just include the supertest function call so you can see what it looks like:
+Since this is our first `POST` test with supertest, I'll just give you the supertest code to get started:
 
 ```
     it ('creates a new contact', function (done) {
       request(app)
-        .post('/contacts')
-        .send({ name: 'sue', email: 'sue@sue.com' })
+        .post('/contacts')          // notice .post instead of .get
+        .send({ name: 'sue', email: 'sue@sue.com' })   // this is used for POST or PUT body
         .expect(201)
         .end(function(err, res){
           if(err) {

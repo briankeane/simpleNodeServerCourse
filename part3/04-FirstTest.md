@@ -26,6 +26,15 @@ Then we import our ContactHandler with the next line, assigning it the name Cont
 
 The describe and it blocks are both part of mocha.  
 
-Describe has no purpose other than to group a set of related tests and to describe what makes them related.  We'll be nesting describe blocks later (and this will make more sense then).
+Describe has no purpose other than to provide a string describing the group of 'it' blocks it contains.  Things like: 'A User', or 'GET /contacts/:id'.
 
-Now we've set up a test that should fail, because there is no code yet for creating a contact.  Run the test and see what happens (it's a little surprising).
+The 'it' block contains the actual test.  The three steps of testing are:
+  1. set up the environment
+  2. run the code that's being tested
+  3. check the environment to make sure that:
+    a. what we wanted to change has changed
+    b. anything that may have accidentally been changed has remained the same.
+
+We don't really need any setup code because we're creating a contact, so the app's initial state is perfect.  Then we run the code we are testing with the `Contact.create` line.  Finally, we check the environment again to make sure that a new record was created and that it contains the information we wanted it to.
+
+Logically, this test should fail because we have no code in our Contact.Create function -- but run the test with `npm test` and see what happens (it's a little surprising).

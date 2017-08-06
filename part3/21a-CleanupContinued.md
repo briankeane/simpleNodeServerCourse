@@ -4,20 +4,20 @@ Now would be a great time to commit and push your changes.  After you've pushed 
 ```
 git checkout master
 ```
-In sublime text, notice how much has changed.  If moving all these folders around had broken everything and we decided to revery to our old structure, the line `git checkout master` is all we need to set everything back the way it was.  You can see how useful it is to make a new branch anytime you are working on a change of any significance.
+In sublime text, notice how much has changed.  If moving all these folders around had broken everything and we decided to revert to our old structure, the line `git checkout master` is all we need to set everything back the way it was.  You can see how useful it is to make a new branch anytime you are working on a change of any significance.
 
 Now go back to the new branch:
 ```
 git checkout addTesting
 ```
 
-While our structure is much cleaner than it was a few minutes ago, we can still get more code into those subfolders so that when we want to fix something we know exactly where to look.  As it is, all of our request handling functions are in server.js, but it would make more sense to have contacts handlers in the contacts folder, users handlers in the users folder, etc.  (Even though right now we only have contacts, server.js could get huge and confusing really quickly)
+While our structure is much cleaner than it was a few minutes ago, if we were blindly looking at our app we would probably assume that the code to handle our `contacts` requests would be somewhere in our `contacts` folder.  Also our `contact.api.spec.js` file is testing code that is in our main `server` folder.  It would be better if `contacts` were the only place we had to look for any code that has to do with `contacts`, so lets move all of the `routes` into our `contacts` folder.
 
-Let's move all of our routes into a new file called contact.routes.js.  In the terminal, cd into our contact folder and type: `touch contact.routes.js`.  Then open our new file and our server.js file side by side (in sublime text, press `command-option-2` for side-by-side windows).
+This may not seem all that much better as it is, but imagine once we have 10 different 'models' (user, contact, company, etc...).  ALL of that code would be inside of `server.js` so we'd have to do a lot of searching in order to find it.
 
-Remove every route from server.js and move them to contactRoutes.js.  Also remove the line `const Contact = require('./contact/contact.js')` and move that into our new contact.routes.js file as `const Contact = require('./contact.js');`.
+In the terminal, cd into our contact folder and type: `touch contact.routes.js`.  Then open our new file and our server.js file side by side (in sublime text, press `command-option-2` for side-by-side windows).
 
-Now let's add our new routes file -- we'll add the reference just after the middleware.
+Cut all the routes from server.js and paste them into contactRoutes.js.  Also remove the line `const Contact = require('./contact/contact.js')` and move that into our new contact.routes.js file as `const Contact = require('./contact.js');`.
 
 Our server.js should just look like this now:
 ```
@@ -37,8 +37,7 @@ app.listen(3000, function () {
 
 module.exports = app;
 ```
-
-Since we don't have the 'app' to add the routes to in this file, we can make an express "Router()", register all the contacts routes to that, and then add the Router as middleware in `server.js`.
+Now take a look at `contact.routes.js`.  Since we don't have the 'app' to add the routes to in this file, we can make an express "Router()", register all the contacts routes to that, and then add the Router as middleware in `server.js`.  I'm sure that's confusing but it's easier to do than it sounds.
 
 In contact.routes.js add this to the top:
 ```

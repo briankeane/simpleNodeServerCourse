@@ -1,8 +1,8 @@
 # Test Find
 
-Ok!  Now that we've got the test passing, go ahead and make a git commit with the message "add find with test for find by name."  Don't forget to push the name of your branch instead of `master`
+Ok!  Now that we've got the test passing, go ahead and make a git commit with the message "add find with test for find by name."  Don't forget to push the name of your branch instead of `master` (`git push origin addTests`).
 
-Now we need to write the same test for find by name.  We'd like to run both of these tests at once to make sure that if we modify any code, we don't break the first test.  Move the `only` up to the enclosing `Describe` block:
+Now we need to write the same test for find by name.  We'd like to run both of these tests at once to make sure that if we modify any code, we don't break the first test.  Move the `only` up to the enclosing `Describe` block, and mocha will only execute the tests inside of the describe block.
 
 ```
 describe.only('find', function () {
@@ -12,6 +12,7 @@ describe.only('find', function () {
 We can use the exact same setup for each of these tests, but it'd be easier not to type them twice.  We can have them share the setup code by adding a `beforeEach` block.
 
 A `beforeEach` block will be executed before any test called within it's describe block.  For example, comment out your entire test file and replace it with this:
+
 ```
 describe('Level1', function () {
   beforeEach(function () {
@@ -43,6 +44,8 @@ describe('Level1', function () {
   });
 });
 ```
+If you run `npm test` you can see which code gets executed and when.
+
 As you can see -- level 4 gets all described blocks run.  Level 3 has them all run except level 4.
 
 Now put contact.spec.js back like it was.  Let's move the setup code to a before block, so we only have to type it (or... in the future, change it) once.
@@ -132,4 +135,4 @@ Solution:
     });
 ```
 
-Run your tests and see them pass!  It's a good idea to make sure your new test fails with a bad result.
+Run your tests and see them pass!  It's a good idea to make sure your new test fails with a bad result (replace `sam@sam.com` with `somethingelse@somethingelse.com` and make sure you get a failure).

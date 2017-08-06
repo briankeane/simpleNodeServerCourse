@@ -21,10 +21,16 @@ Ok -- now that all the setup is complete you should be able to figure out findBy
 
 Now copy/paste/edit the code from server.js until you get the test to pass.  Then make a git commit.
 
-PRACTICE: Create a good test for findById (it should take a string and a callback for arguments.  The  callback with `(err, foundContact) ## one single object instead of an array`). Also 
+PRACTICE: Create a good test for findById.  Calling findById properly should look like this:
+
+```
+  Contact.findById(3, function (err, foundContact) {
+    // notice that foundContact is a single contact instead of an array of contacts
+  });
+```
 
 1. write a test for passing an id that does not exist. (foundContact should be undefined or null)
-2. One more test for an edge case -- what happens if you pass `null` or `undefined` for the id -- in that case the callback should get an undefined.
+2. One more test for an edge case -- what happens if you pass `null` or `undefined` for the id -- in that case both `err` and `foundContact` should be undefined or null.
 
 Now make the tests pass!  Solutions below:
 ```

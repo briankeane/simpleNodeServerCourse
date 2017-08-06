@@ -1,6 +1,6 @@
 ## Supertest
 
-For our integration tests, we're going to use a an outside library called "supertest" that makes actual /GET /PUT /POST /DELETE requests to our app.
+For our integration tests, we're going to use a an outside library called "supertest" that starts an instsance of our app on a server and then makes actual /GET /PUT /POST /DELETE requests to it -- just like Postman would do.
 
 In the terminal type: `npm install --save-dev supertest`.
 
@@ -14,7 +14,9 @@ We also need to give supertest access to our app, so we've got to expose it in s
 module.exports = app;
 ```
 
-I like to store supertest in a variable called 'request' because whenver we call it we are making a request, so it's easy to read in the test file.  In our integration tests, we pass our app to supertest and supertest will start our app send it whatever requests we specify.  For our first test/ let's check the GET /contacts/:id endpoint and make sure it returns the correct contact info.
+We've never had to expose it before, because nothing has had to "talk" to the app.
+
+For our first test/ let's check the GET /contacts/:id endpoint and make sure it returns the correct contact info.
 
 ```
   describe('GET /contacts/:id', function () {
@@ -40,7 +42,11 @@ I like to store supertest in a variable called 'request' because whenver we call
   });
 ```
 
-Now run the code.. it will fail because our setup code sets up the Contact.contacts array, and we don't have that plugged into our GET function yet.  Go ahead and require our new Contact at the top of server.js.  
+Now run the code.. it will fail because our setup code sets up the Contact.contacts array, but our `server.js` file is still using the contacts array in `server.js`.  It's time to get plug Contact into server.js.  
+
+All the functions that we are going to add to `server.js` are tested in `contact.spec.js`, so don't forget that you can always open that file to see perfect examples of how to use our ContactHandler. 
+
+Go ahead and require our new Contact at the top of server.js.  
 
 Then you can replace the code in app.get('/contacts/:id') with a call to Contact.findById(Number(req.params.id), function (err, foundContact))...  See if you can get the test to pass with the new setup.  Solution Below:
 ```
