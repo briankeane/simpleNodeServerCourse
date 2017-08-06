@@ -28,7 +28,7 @@ function ContactsHandler() {
 
   };
 
-  this.Create = function (attrs, callback) {
+  this.create = function (attrs, callback) {
 
   };
 
@@ -39,8 +39,6 @@ function ContactsHandler() {
 
 module.exports = new ContactsHandler();
 ```
-
-These particular function names match some database stuff we'll be doing later, so make sure you copy the names exactly (capitalization, too).
 
 Go ahead and save the file.  
 

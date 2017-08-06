@@ -173,7 +173,7 @@ Go ahead and finish up the rest of the search tests.  Here's mine below with an 
     });
 
   it ('searches by both name and email', function (done) {
-    Contact.Create({ name: 'bob@bob.com', email: 'totallyDifferentEmail@different.com' }, function (err, createdContact) {
+    Contact.create({ name: 'bob@bob.com', email: 'totallyDifferentEmail@different.com' }, function (err, createdContact) {
       request(app)
         .get('/contacts/search')
         .query({ email: 'bob@bob.com', email: 'totallyDifferentEmail@different.com' })

@@ -17,6 +17,6 @@ Now we need to add a new script to run our tests.  Add this new entry to "script
 
 There's one more library we're going to use called "chai."
 
-PRACTICE -- install "chai" (google) into our devDependencies.
+PRACTICE -- install "chai" (google "npm chai installation") into our devDependencies.
 
 Now let's make our first test.

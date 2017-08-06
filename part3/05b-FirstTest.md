@@ -6,7 +6,7 @@ In our contact.spec.js file:
 ```
 describe('A Contact', function () {                 // line 1
   it('creates a contact', function () {             // line 2
-    Contact.Create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {   // line 3
+    Contact.create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {   // line 3
       expect(createdContact.name).to.equal('bob');        // line 4
       expect(createdContact.email).to.equal('bob@bob.com');    // line 5
     });          // line 6
@@ -20,7 +20,7 @@ You can tell that this is what's happening if you add a failing expectation afte
 ```
 describe('A Contact', function () {                 // line 1
   it('creates a contact', function () {             // line 2
-    Contact.Create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {   // line 3
+    Contact.create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {   // line 3
       expect(createdContact.name).to.equal('bob');        // line 4
       expect(createdContact.email).to.equal('bob@bob.com');    // line 5
     });          // line 6
@@ -33,7 +33,7 @@ Fortunately it's easy to tell mocha to wait for a callback. We do that with the 
 ```
 describe('A Contact', function () {
   it('creates a contact', function (done) {       // THIS LINE IS DIFFERENT
-    Contact.Create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {
+    Contact.create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {
       expect(createdContact.name).to.equal('bob');
       expect(createdContact.email).to.equal('bob@bob.com');
       done();         // AND THIS LINE SAYS WE'RE FINISHED

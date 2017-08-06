@@ -98,7 +98,7 @@ Scroll down for the solution.
 new `server.js` endpoint
 ```
 app.post('/contacts', function (req, res) {
-  Contact.Create(req.body, function (err, createdContact) {
+  Contact.create(req.body, function (err, createdContact) {
     res.status(201).send(createdContact);
   });
 }); 

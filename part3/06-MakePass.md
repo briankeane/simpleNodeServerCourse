@@ -67,7 +67,7 @@ When you think you've come up with something that works, run the test and see if
 //
 //
 
-  this.Create = function (attrs, callback) {
+  this.create = function (attrs, callback) {
     attrs.id = self.contactsID;
     self.contactsID++;
     this.contacts.push(attrs);
