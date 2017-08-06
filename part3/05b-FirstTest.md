@@ -14,7 +14,7 @@ describe('A Contact', function () {                 // line 1
 });
 ```
 
-Execution of the test starts with line 9.  Remember that calling the async function means... "when you're done... perform this callback."  That means after passing the callback, this function is done executing.  It skips to line 7, finds the end of the function, and returns.  It does not wait for the callback to be executed.
+Execution of the test starts with line 3.  Remember that calling the async function means... "when you're done... perform this callback."  That means after passing the callback, this function is done executing.  It skips to line 7, finds the end of the function, and returns.  It does not wait for the callback to be executed.
 
 You can tell that this is what's happening if you add a failing expectation after the callback function, like this:
 ```

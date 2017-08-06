@@ -9,46 +9,15 @@ You may have noticed while creating the SEARCH endpoint that building it with Po
 5. Perform a search on EMAIL
 6. Perform a search with both NAME and EMAIL
 
-You could come up with a system with many Postman tabs where you can get all this done with a few clicks, but a much better way to do this is to automate the setup and teardown so that you can run the code you've created in just a few seconds.  To me this is by far the biggest advantage of having tests, but there are also two other big advantages.
+Sometimes it can take up to a minute or two to figure out whether a small change worked or not.  Once an app gets to a certain level of complexity (signing in/out, etc) you start to spend more time manually testing your changes than it takes to make them.
+
+With testing you can automate the whole setup of the environment so that you can run the code you've created in just a couple seconds.  To me this is by far the biggest advantage of having tests, but there are also two other big advantages.
 
 1. These tests serve as an example for how to use the code you've written, so if you ever forget exactly what you called an endpoint or whether you used query or params, you can look at the test file and immediately refresh your memory.
 2. When you make big changes to the internals (such as the way you store a contact), you can just run the tests and make sure they still pass instead of having to manually test all parts of your app.
 
-There are a lot of things we have to do to get this app set up for testing.  Before you make a major change it is always a good idea to create a new github branch to hold your code.  In the terminal type:
+There are a lot of things we have to do to get this app set up for testing.  Before you make a major change it is always a good idea to create a new github branch to hold your code.  Make sure your repo is up to date (type `git status` and if anything has changed and has not been pushed, go ahead and make a commit and push up the changes).  Then in the terminal type:
 
 ```
-git checkout -b messyBranch
-```
-
-The -b flag tells it to create a new branch.  Now go into server.js and delete eveything and replace it with junk:
-```
-dfsakljhfdsahlfasdkhjlasdfkljhfas
-fasdlkjasfdjklkjsadf
-
-fadskjhasdfjkhlhjkfas
-fdasklhjafslkjfas
-```
-
-This is to simulate what happens when you try and add a crappy library and discover it's wrong for your app.  You will have lots of little lines of code across dozens of files that need to be reverted, so you can imagine what a mess it usually is to dig yourself out of.
-
-Save that junk into your file and type this into the terminal
-```
-git add --all
-git commit -m "deleted everything"
-git push origin messyBranch   # notice the switch.  We're no longer
-                              # working on the master branch
-```
-Now try to start your server and watch it fail.
-```
-npm start
-```
-Now revert your changes with one line and try your server again:
-```
-git checkout master
-npm start
-```
-So easy, right?  Now delete the crappy branch and start a new one for adding testing.
-```
-git push origin --delete messyBranch
 git checkout -b addTesting
 ```
