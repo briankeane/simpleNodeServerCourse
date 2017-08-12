@@ -47,7 +47,7 @@ const router = express.Router();
 
 Then change all `app.post`, `app.get`, etc, to `router.post` and `router.get`.  Then at the bottom let's export the router with `module.exports = router;`
 
-Also delete '/contacts' from the addresses since they all have that in common, and we'll put that in server.js.  Your final `contacts.routes.js` file should look like this:
+Also delete '/contacts' from the addresses since they all have that in common, and we'll tell `server.js` to call this file anytime the route starts with `/contacts`.  Your final `contacts.routes.js` file should look like this:
 ```
 const express = require('express');
 const router = express.Router();
