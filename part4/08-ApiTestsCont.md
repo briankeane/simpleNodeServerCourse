@@ -1,111 +1,135 @@
-# API Tests cont.
+# Api Tests
 
-I'm sure by now this is a tiring process... The good news is that we just made a major change to our code, and the tests are telling us exactly what code was affected by those changes, without us having to guess and run Postman over and over.  But making a major project change is never fun. Luckily this is the last big change we'll have to do.
+Ok now we have 3 failing tests.  The first one for me is:
+```
+  1) /contacts GET /contacts/:id GETs a contact if it exists:
+     Error: expected 200 "OK", got 404 "Not Found"
+```
+So open up `contact.api.spec.js` and put a `.only` in front of the 'GETs a contact' test.
 
-The other thing is that the pattern with a large change is that typically at first the errors are a little difficult, and then they get gradually easier and easier as you eliminate them.
+We're getting a 404 so lets open up `contact.controller.js` and see what's going on.
 
-So let's continue!  The next one I've got is:
+There are 2 reasons we could get a 404.  The routing could be wrong, in which case it's not even executing our `show` function code.  Let's make sure that code is being called by placing a `console.log('im here');` as the first line in `contacts.controller.js`'s 'show' function:
 ```
-  1) /contacts searches by email continued:
-     Uncaught AssertionError: expected '598e3181d1bf1c5affcf3ae9' to equal 2
-      at Test.<anonymous> (server/contact/contact.api.spec.js:305:38)
-```
-Easy enough -- the bad line is `expect(results[0].id).to.equal(2);` where `2` needs to be an id.  Change it to `expect(results[0].id).to.equal(savedContacts[1].id);`.  Now run the test again and it should pass!
-
-The next test:
-```
-/contacts GET /contacts/:id GETs a contact if it exists:
-     Error: expected 200 "OK", got 500 "Internal Server Error"
-      at Test._assertStatus (node_modules/supertest/lib/test.js:266:12)
-```
-
-If you look at GETs a contact if it exists, you'll see 2 obvious errors.  `.get('/contacts/3')` instead of:
-```
-.get(`/contacts/${savedContacts[2].id}`);
-
-and 
-
-```
-expect(res.body.id).to.equal(3);
-```
-instead of 
-```
-expect(res.body.id).to.equal(savedContacts[2].id);
+module.exports.show = function (req, res) {
+  console.log('im here');
+  Contact.findById(Number(req.params.id), function (err, foundContact) {
+    if (foundContact) {
+      return res.status(200).send(foundContact);
+    }
+    return res.status(404).send({ message: 'contact not found'});
+  });
+};
 ```
 
-2 down!
+Then run `npm test`.  Do you see the `im here` output?  So now we know our code is executing.
 
-```
-1) /contacts GET /contacts/:id returns 404 if id not found:
-     Error: expected 404 "Not Found", got 500 "Internal Server Error"
-```
-This one is tougher -- go ahead and run it with a `.only` and take a closer look at the error that is logged.
+One thing we are not doing in the controller that is pretty standard is checking for an error from `findById`.  This is always a good practice and is normally included 100% of the time.
 
-We're passing `999` as the id, but the error that we're getting is `MongooseError: Cast to ObjectId failed for value "999" at path "_id"`.  A mongoose _id is a hex string of a certain length, and when it doesn't get a valid mongoose id to search for mongoose puts an error in the callback instead of saying 'not found'.  What we need is a valid mongoose ID string to pass into the test that doesn't exist yet.
+The response code for a server error is 500, so if there's an error we are going to: 1) log it, and 2) respond to the api request with a 500 and the error.
 
-Fortunately mongoose has an easy way to do this.  At the top of `contact.api.spec.js` add: `const mongoose = require('mongoose');`.  Then in our test replace `.get('/contacts/999')` with:
+Our `show` should now look like this:
 ```
-  .get(`/contacts/${mongoose.Types.ObjectId()}`)
+module.exports.show = function (req, res) {
+  Contact.findById(Number(req.params.id), function (err, foundContact) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    if (foundContact) {
+      return res.status(200).send(foundContact);
+    }
+    return res.status(404).send({ message: 'contact not found'});
+  });
+};
 ```
 
-1 more Down!
-
-The next one I have is:
+Now run the test and see what happens.  Now you get a much more useful error message logged to the screen and a 500 status code:
 ```
-1) /contacts POST /contacts creates a new contact:
-     Uncaught TypeError: Cannot read property 'length' of undefined
-      at server/contact/contact.api.spec.js:107:38
+Example app listening on port 3000!
+  /contacts
+    GET /contacts/:id
+{ MongooseError: Cast to ObjectId failed for value "NaN" at path "_id"
 ```
-You should tackle this one.  What's wrong with `expect(Contact.contacts.length).to.equal(6)` and how can we fix the test?
 
-Solution below:
+Ok -- findById is having trouble converting req.params.id to a mongoose ID.  Do you see the problem?
+
+We are casting it to a Number and we don't need to do that anymore.  Go ahead and remove the `Number()` function from `show`. While you're at it, might as well remove it from `modify` and `delete` as well.  (It's in `delete` twice!).
+
+Also go ahead and add error handling to every function so that in the future, these useful errors will be printed out instead of getting ignored.  Your final `contact.controller.js` file should look like this:
 ```
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-it ('creates a new contact', function (done) {
-      request(app)
-        .post('/contacts')
-        .send({ name: 'sue', email: 'sue@sue.com' })
-        .expect(201)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            expect(res.body.name).to.equal('sue');
-            expect(res.body.email).to.equal('sue@sue.com');
-            expect(res.body.id).to.exist;
+const Contact = require('./contact.model.js');
 
-            Contact.findById(res.body.id, function (err, foundContact) {
-              expect(foundContact.name).to.equal('sue');
-              expect(foundContact.email).to.equal('sue@sue.com');
-              expect(foundContact.id).to.equal(res.body.id);
-              Contact.find({}, function (err, allContacts) {
-                expect(allContacts.length).to.equal(6);
-                done();
-              });
-            });
-          }
-        });
+module.exports.create = function (req, res) {
+  Contact.create(req.body, function (err, createdContact) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    res.status(201).send(createdContact);
+  });
+};
+
+module.exports.search = function (req, res) {
+  Contact.find(req.query, function (err, results) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    return res.status(200).send({ results: results });
+  });
+};
+
+module.exports.show = function (req, res) {
+  Contact.findById(req.params.id, function (err, foundContact) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    if (foundContact) {
+      return res.status(200).send(foundContact);
+    }
+    return res.status(404).send({ message: 'contact not found'});
+  });
+};
+
+module.exports.modify = function (req, res) {
+  Contact.findById(req.params.id, function (err, foundContact) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    if (foundContact) {
+      foundContact = Object.assign(foundContact, req.body);
+      return res.status(200).send(foundContact);
+    }
+    return res.status(404).send({ message: 'contact not found'});
+  });
+};
+
+module.exports.delete = function (req, res) {
+  Contact.findById(req.params.id, function (err, foundContact) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
+    if (!foundContact) {
+      return res.status(404).send({ message: 'contact not found' });
+    }
+    Contact.remove({ id: req.params.id }, function (err) {
+      if (err) {
+        console.log(err);
+        return res.status(500).send(err);
+      }
+      return res.status(200).send({ message: 'contact deleted' });
     });
+  });
+};
+
+module.exports.list = function (req, res) {
+  Contact.find({}, function (err, foundContacts) {
+    return res.status(200).send(foundContacts);
+  });
+};
 ```
+Go ahead and run the tests and...  5 errors!  This is also OK.  Let's keep taking them one at a time and see what's going on shows up.

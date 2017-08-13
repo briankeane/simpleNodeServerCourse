@@ -74,7 +74,7 @@ Solution Below:
 //
 //
 //
-const Contact = require('../api/contact/contact.model.js');
+const Contact = require('../contact/contact.model.js');
 
 function SpecHelper() {
   var self = this;
@@ -95,3 +95,30 @@ function SpecHelper() {
 
 module.exports = new SpecHelper();
 ```
+const app = require('../server.js');
+const request = require('supertest');
+
+const expect = require('chai').expect;
+const Contact = require('./contact.model.js');
+const mongoose = require('mongoose');
+const SpecHelper = require('../utilities/specHelper.js');
+
+describe('/contacts', function () {
+  beforeEach(function (done) {
+    SpecHelper.clearDatabase(function (err) {
+      done();
+    });
+  });
+```
+
+Now run `npm test` and make sure it still works.
+
+At this point it looks like the same amount of code, so what's the advantage of making SpecHelper?  There are two main reasons for it:
+
+1. Eventually clearing the database will require a lot more code (once we add users or any more models).  By separating this out now we will only have to write that code once, instead of re-writing it in every test every time we add a model.
+
+2.  If we want to drastically change the way our database is cleared (go back to storing our data in an array, or switch to a different type of database), our tests will only break in one place.
+
+The basic idea is that we want everything in our test files to work independently of our internals.
+
+Now let's create a seedDatabase function that loads our data.

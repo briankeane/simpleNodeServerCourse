@@ -28,43 +28,4 @@ What's really cool is that we can use our `contacts.spec.js` file to make sure o
 
 Save `contact.model.js` and open up `contacts.spec.js`.  Then change the first line `const Contact = require('./contact.js')` to use our new model file instead: `const Contact = require('./contact.model.js');`
 
-Most of our tests can stay the same!  Except now that we are using a database, our beforeEach is going to have to change so that it sets up the database instead of our contacts array.
-
-First lets add a beforeEach block at the top level to clear the database before every test:
-```
-describe('A Contact', function () {  // this line was already there
-  beforeEach(function (done) {
-    Contact.find({}).remove(function (err) {
-      done();
-    });
-  });
-```
-
-Notice that we can pass `done()` to a 'beforeEach' function as well as an 'it' function.  The `find({}).remove` line is mongoose's syntax for removing all documents for the `Contact` model.
-
-Let's see if Contact.create is working yet.  Put a `.only` in front of the `it ('creates a contact'` test and run `npm test`.  If we're lucky it should work!
-
-We need to do one more thing -- we've checked to make sure that `createdContact` has all the right properties, but for a really thorough test we should actually check the database and make sure that it has been written to with the correct info.  We do that by searching the db with a mongoose class function called `findById`, and then making sure that the model we find has all the correct info.
-
-The final new 'it' block should look like this:
-```
-it.only('creates a contact', function (done) {
-    Contact.create({ name: 'bob', email: 'bob@bob.com' }, function (err, createdContact) {
-      console.log(createdContact);
-      expect(createdContact.name).to.equal('bob');
-      expect(createdContact.email).to.equal('bob@bob.com');
-      expect(createdContact.id).to.exist;
-
-      // Also check the db
-      Contact.findById(createdContact.id, function (err, foundContact) {
-        expect(foundContact.name).to.equal('bob');
-        expect(foundContact.email).to.equal('bob@bob.com');
-        expect(foundContact.id).to.exist;
-        done();
-      });
-    });
-  });
-```
-
-Now run `npm test` and see what you get!
-
+Normally we could plug in our unit tests to let us know about any tweaking that needs to happen, but because these were our first tests we set them up in a much more 'brittle' way than we normally would.  Next, we need to revise our tests so that they look a little more like the tests that work in the real world.

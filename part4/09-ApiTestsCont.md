@@ -1,212 +1,35 @@
-# Api Tests
+# API Tests Continued
 
-Ok only 6 to go!  First off:
+The first test I have failing now is:
 ```
-  1) /contacts PUT /contacts/:id returns 404 if the provided id does not exist:
-     Error: expected 404 "Not Found", got 500 "Internal Server Error"
-
-     and 
-
-
-  1) /contacts DELETE /contacts/:id returns 404 if the provided id does not exist:
+ 1) /contacts GET /contacts/:id returns 404 if id not found:
      Error: expected 404 "Not Found", got 500 "Internal Server Error"
 ```
-These are both repeats ofthe same problem we saw in: `/contacts GET /contacts/:id GETs a contact if it exists:`.  See if you can spot it and remember the solution.
-```
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-    it ('returns 404 if the provided id does not exist', function (done) {
-      request(app)
-        .put(`/contacts/${mongoose.Types.ObjectId()}`)
-        .expect(404)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            done();
-          }
-        });
-    });
 
-    it ('returns 404 if the provided id does not exist', function (done) {
-      request(app)
-        .delete(`/contacts/${mongoose.Types.ObjectId()}`)
-        .expect(404)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            done();
-          }            
-        });
-    });
+Put a `.only` in front of this test and see what happens.  We get the useful error:
+```
+Example app listening on port 3000!
+  /contacts
+    GET /contacts/:id
+{ MongooseError: Cast to ObjectId failed for value "999" at path "_id"
 ```
 
-Ok now this one:
+Mongoose requires a specific type of hex string as an id.  If it doesn't receive that type of string, it throws an error.  What we need is a way to get a genuine looking `id` that doesn't match anything in our db.
+
+Fortunately, mongoose provides an id generator.  Lets provide that in our model so that if we change databases or something, we can just replace that generateID code instead of changing our tests.
+
+In `contact.model.js` add this function:
 ```
- 1) /contacts DELETE /contacts/:id deletes a contact:
-     Error: expected 200 "OK", got 500 "Internal Server Error"
+ContactSchema.statics.generateID  = function () {
+  return mongoose.Types.ObjectId();
+};
 ```
 
-Just looking at the test we've got our usual problem in the `.delete('/contacts/3')` line.  Change that to:
+That just gives us a new, unused mongoose id.  Let's use our new function in our tests anywhere that we need a fake id.  (The two 404 tests).
 ```
-.delete(`/contacts/${savedContacts[2].id}`)
-```
-Also in the test, we can no longer use `Contact.contacts`.  Remove all our expectations and replace them with our new way of doing it:
-```
-Ok down to 3 failing tests.  These are all duplicates of problems that we've arleady solved.  See if you can finish.  When you're done, the final full test file is below:
-
-```
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-const app = require('../server.js');
-const request = require('supertest');
-
-const expect = require('chai').expect;
-const Contact = require('./contact.model.js');
-const mongoose = require('mongoose');
-
-describe('/contacts', function () {
-  beforeEach(function (done) {
-    Contact.find({}).remove(function (err) {
-      done();
-    });
-  });
-
-  var savedContacts;
-  beforeEach(function (done) {
-    Contact.create({
-                     name: 'bob',
-                     email: 'bob@bob.com'
-                  }, function (err, savedContact0) {
-      Contact.create({
-                     name: 'sam',
-                     email: 'sam@sam.com'
-                  }, function (err, savedContact1) {
-        Contact.create({
-                     name: 'bill',
-                     email: 'bill@bill.com'
-                  }, function (err, savedContact2) {
-          Contact.create({
-                     name: 'bob',
-                     email: 'bob@bob.com'
-                  }, function (err, savedContact3) {
-            Contact.create({
-                     name: 'bill',
-                     email: 'bill@bill.com'
-                  }, function (err, savedContact4) {
-              savedContacts = [
-                                savedContact0,
-                                savedContact1,
-                                savedContact2,
-                                savedContact3,
-                                savedContact4
-                              ];
-              done();
-            });
-          });
-        });
-      });
-    });
-  });
-
-  describe('GET /contacts/:id', function () {
-    it ('GETs a contact if it exists', function (done) {
-      request(app)
-        .get(`/contacts/${savedContacts[2].id}`)
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            expect(res.body.name).to.equal('bill');
-            expect(res.body.email).to.equal('bill@bill.com');
-            expect(res.body.id).to.equal(savedContacts[2].id);
-            done();
-          }
-        });
-    });
-
     it('returns 404 if id not found', function (done) {
       request(app)
-        .get(`/contacts/${mongoose.Types.ObjectId()}`)
-        .expect(404)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            done();
-          }
-        });
-    });
-  });
-
-  describe('POST /contacts', function () {
-    it ('creates a new contact', function (done) {
-      request(app)
-        .post('/contacts')
-        .send({ name: 'sue', email: 'sue@sue.com' })
-        .expect(201)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            expect(res.body.name).to.equal('sue');
-            expect(res.body.email).to.equal('sue@sue.com');
-            expect(res.body.id).to.exist;
-
-            Contact.findById(res.body.id, function (err, foundContact) {
-              expect(foundContact.name).to.equal('sue');
-              expect(foundContact.email).to.equal('sue@sue.com');
-              expect(foundContact.id).to.equal(res.body.id);
-              Contact.find({}, function (err, allContacts) {
-                expect(allContacts.length).to.equal(6);
-                done();
-              });
-            });
-          }
-        });
-    });
-  });
-
-  describe('PUT /contacts/:id', function () {
-    it ('returns 404 if the provided id does not exist', function (done) {
-      request(app)
-        .put(`/contacts/${mongoose.Types.ObjectId()}`)
+        .get(`/contacts/${Contact.generateID()}`)
         .expect(404)
         .end(function(err, res){
           if(err) {
@@ -219,38 +42,27 @@ describe('/contacts', function () {
         });
     });
 
-    it('modifies a contact', function (done) {
+// and
+
+    it ('returns 404 if the provided id does not exist', function (done) {
       request(app)
-        .put(`/contacts/${savedContacts[2].id}`)
-        .send({ email: 'newEmail@newEmail.com', name: 'newName' })
-        .expect(200)
+        .put(`/contacts/${Contact.generateID()}`)
+        .expect(404)
         .end(function(err, res){
           if(err) {
             console.log('you have fucked up');
             console.log(err);
             done(err);
           } else {
-            // check the response body
-            expect(res.body.name).to.equal('newName');
-            expect(res.body.email).to.equal('newEmail@newEmail.com');
-            expect(res.body.id).to.equal(savedContacts[2].id);
-            
-            // now make sure it got changed on the server
-            Contact.findById(savedContacts[2].id, function (err, foundContact) {
-              expect(foundContact.name).to.equal('newName');
-              expect(foundContact.email).to.equal('newEmail@newEmail.com');
-              expect(foundContact.id).to.equal(savedContacts[2].id);
-              done();
-            });
+            done();
           }
         });
     });
-  });
 
-  describe('DELETE /contacts/:id', function () {
+// and
     it ('returns 404 if the provided id does not exist', function (done) {
       request(app)
-        .delete(`/contacts/${mongoose.Types.ObjectId()}`)
+        .delete(`/contacts/${Contact.generateID()}`)
         .expect(404)
         .end(function(err, res){
           if(err) {
@@ -262,166 +74,6 @@ describe('/contacts', function () {
           }            
         });
     });
-    
-    it ('deletes a contact', function (done) {
-      request(app)
-        .delete(`/contacts/${savedContacts[2].id}`)
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            // check the response body
-            Contact.find({}, function (err, allContacts) {
-              expect(allContacts.length).to.equal(4);
-              var ids = allContacts.map((contact) => contact.id);
-              expect(ids).to.not.contain(savedContacts[2].id);
-              done();
-            });
-          }            
-        });
-    });
-  });
 
-  describe('GET /contacts', function () {
-    it ('gets all the contacts', function (done) {
-      request(app)
-        .get('/contacts')
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body;
-            expect(results.length).to.equal(5);
-            
-            // check the first results to make sure it worked.
-            // We may want to change the order later, so that's why
-            // we are just checking for existence here.
-            expect(results[0].name).to.exist;
-            expect(results[0].email).to.exist;
-            expect(results[0].id).to.exist;
-
-            // now make sure it got them all with no duplicates
-            var ids = results.map((result) => result.id);
-            expect(ids).to.contain(savedContacts[0].id);
-            expect(ids).to.contain(savedContacts[1].id);
-            expect(ids).to.contain(savedContacts[2].id);
-            expect(ids).to.contain(savedContacts[3].id);
-            expect(ids).to.contain(savedContacts[4].id);
-            done();
-          }
-        });
-    });
-  });
-
-  describe('GET /search', function (done) {
-    it ('searches by name', function (done) {
-     request(app)
-        .get('/contacts/search')
-        .query({ name: 'bob' })
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body.results;
-            expect(results.length).to.equal(2);
-            var ids = results.map((contact) => contact.id);
-            expect(ids).to.contain(savedContacts[0].id);
-            expect(ids).to.contain(savedContacts[3].id);
-            done();
-          }
-      });
-    });
-
-    it ('searches by name continued', function (done) {
-        request(app)
-        .get('/contacts/search')
-        .query({ name: 'sam' })
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body.results;
-            expect(results.length).to.equal(1);
-            expect(results[0].id).to.equal(savedContacts[1].id);
-            done();
-          }
-        });
-    });
-  });
-
-    it ('searches by email', function (done) {
-      request(app)
-        .get('/contacts/search')
-        .query({ email: 'bob@bob.com' })
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body.results;
-            expect(results.length).to.equal(2);
-            var ids = results.map((contact) => contact.id);
-            expect(ids).to.contain(savedContacts[0].id);
-            expect(ids).to.contain(savedContacts[3].id);
-            done();
-          }
-        });
-    });
-
-    it ('searches by email continued', function (done) {
-      request(app)
-        .get('/contacts/search')
-        .query({ email: 'sam@sam.com' })
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body.results;
-            expect(results.length).to.equal(1);
-            expect(results[0].id).to.equal(savedContacts[1].id);
-            done();
-          }
-        });
-    });
-
-  it ('searches by both name and email', function (done) {
-    Contact.create({ name: 'bob@bob.com', email: 'totallyDifferentEmail@different.com' }, function (err, createdContact) {
-      request(app)
-        .get('/contacts/search')
-        .query({ email: 'bob@bob.com', email: 'totallyDifferentEmail@different.com' })
-        .expect(200)
-        .end(function(err, res){
-          if(err) {
-            console.log('you have fucked up');
-            console.log(err);
-            done(err);
-          } else {
-            var results = res.body.results;
-            expect(results.length).to.equal(1);
-            expect(results[0].id).to.equal(createdContact.id);
-            done();
-          }
-        });
-    });
-  });
-});
 ```
-
-
+Now remove the `.only` and run `npm test`.  Back down to 2 errors!
