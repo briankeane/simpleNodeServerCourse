@@ -1,6 +1,6 @@
 ## Supertest
 
-For our integration tests, we're going to use a an outside library called "supertest" that starts an instsance of our app on a server and then makes actual /GET /PUT /POST /DELETE requests to it -- just like Postman would do.
+For our integration tests, we're going to use an outside library called "supertest" that starts an instance of our app on a server and then makes actual /GET /PUT /POST /DELETE requests to it -- just like Postman would do.
 
 In the terminal type: `npm install --save-dev supertest`.
 
@@ -20,9 +20,9 @@ For our first test/ let's check the GET /contacts/:id endpoint and make sure it 
 
 ```
   describe('GET /contacts/:id', function () {
-    it ('404s if not found', function (done) {
+    it ('GETs a contact', function (done) {
       request(app)
-        .get('/contacts/999')       // GET request to /contacts/:id with 999 as id
+        .get('/contacts/3')       // GET request to /contacts/:id with 999 as id
         .expect(200)                // EXPECT it to 
         .end(function(err, res){
           if(err) {
