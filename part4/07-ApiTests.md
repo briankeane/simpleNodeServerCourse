@@ -48,13 +48,13 @@ run the tests and check out the body.  You should immediately see the problem.
        email: 'bob@bob.com',
        __v: 0 } ] }
 ```
-We are getting back an `id` in each contact, but we're checking for an `id`!
+We are getting back an `_id` in each contact, but we're checking for an `id`!
 
-While it is common convention to use '_id' internally, it is also common convention to proved `id` externally.  There's really no way for you to know that except to work on a few apps or ask somebody.
+While it is common convention to use '_id' internally, it is also common convention to provide `id` externally.  There's really no way for you to know that except to work on a few apps or ask somebody.
 
 So what we want is to transform the way our object looks just at the last step as it's on the way out of our app.  We could do this individually in the controller, but luckily mongoose has a special method specifically for this purpose.
 
-Open up `contact.model.js` and add this code:
+Open up `contact.model.js` and add some extra code to our new Schema declaration:
 ```
 var ContactSchema = new Schema({
   name:                 { type: String },

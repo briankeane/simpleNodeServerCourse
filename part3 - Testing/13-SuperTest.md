@@ -22,7 +22,7 @@ For our first test/ let's check the GET /contacts/:id endpoint and make sure it 
   describe('GET /contacts/:id', function () {
     it ('404s if not found', function (done) {
       request(app)
-        .get('/contacts/3')       // GET request to /contacts/:id with 999 as id
+        .get('/contacts/999')       // GET request to /contacts/:id with 999 as id
         .expect(200)                // EXPECT it to 
         .end(function(err, res){
           if(err) {

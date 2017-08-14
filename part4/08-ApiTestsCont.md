@@ -128,6 +128,10 @@ module.exports.delete = function (req, res) {
 
 module.exports.list = function (req, res) {
   Contact.find({}, function (err, foundContacts) {
+    if (err) {
+      console.log(err);
+      return res.status(500).send(err);
+    }
     return res.status(200).send(foundContacts);
   });
 };
